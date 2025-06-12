@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimiseur SQL - Gratuit & Efficace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--gradient);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #fff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); }
+            50% { box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5); }
+            100% { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); }
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: var(--light-gray);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
+            text-align: center;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .story-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease;
+        }
+
+        .story-section:hover {
+            transform: perspective(1000px) rotateX(0deg) translateY(-10px);
+        }
+
+        .story-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .feature-text {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Demo Section */
+        .demo-container {
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .demo-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+
+        .demo-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .demo-text {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .demo-placeholder {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            padding: 3rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Community Section */
+        .community-section {
+            background: var(--gradient-accent);
+            color: white;
+            text-align: center;
+            border-radius: 20px;
+            margin: 3rem 0;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .community-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        .community-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .community-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .community-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .feedback-button {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* About Section */
+        .about-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .about-card::before {
+            content: '👨‍💻';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            background: white;
+            padding: 0 20px;
+        }
+
+        .about-title {
+            font-size: 2rem;
+            margin: 2rem 0 1.5rem;
+            color: var(--dark);
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .social-link {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+            margin: 3rem 0 0;
+        }
+
+        .final-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .final-text {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: var(--dark);
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: var(--light-gray);
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .newsletter-input {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            min-width: 250px;
+            transition: border-color 0.3s ease;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .newsletter-button {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .cta-button {
+                padding: 0.9rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .story-section,
+            .about-card {
+                padding: 2rem;
+                margin: 1.5rem 0;
+            }
+            
+            .story-section {
+                transform: none;
+            }
+            
+            .story-section:hover {
+                transform: none;
+            }
+            
+            .story-text {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 2rem;
+                text-align: center;
+            }
+            
+            .demo-container {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .demo-title {
+                font-size: 1.5rem;
+            }
+            
+            .demo-text {
+                font-size: 1.1rem;
+            }
+            
+            .community-section {
+                padding: 3rem 1.5rem;
+                margin: 2rem 0;
+            }
+            
+            .community-title {
+                font-size: 2rem;
+            }
+            
+            .community-text {
+                font-size: 1.1rem;
+            }
+            
+            .feedback-button {
+                padding: 0.8rem 1.5rem;
+                margin: 0.3rem;
+                font-size: 0.9rem;
+            }
+            
+            .about-title {
+                font-size: 1.8rem;
+            }
+            
+            .about-text {
+                font-size: 1rem;
+            }
+            
+            .final-cta {
+                padding: 4rem 1.5rem;
+            }
+            
+            .final-title {
+                font-size: 2rem;
+            }
+            
+            .final-text {
+                font-size: 1.1rem;
+            }
+            
+            .cta-group {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .cta-secondary {
+                padding: 0.9rem 1.8rem;
+                font-size: 0.9rem;
+                min-width: 200px;
+                text-align: center;
+            }
+            
+            .newsletter {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .newsletter-input {
+                min-width: 100%;
+                max-width: 300px;
+            }
+            
+            .newsletter-button {
+                min-width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .section {
+                padding: 2.5rem 0;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .story-section,
+            .about-card,
+            .demo-container,
+            .community-section {
+                padding: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .feature-title {
+                font-size: 1.3rem;
+            }
+            
+            .community-title,
+            .final-title {
+                font-size: 1.8rem;
+            }
+            
+            .about-title {
+                font-size: 1.6rem;
+            }
+            
+            .demo-placeholder {
+                padding: 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Touch improvements for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .feature-card:hover,
+            .story-section:hover {
+                transform: none;
+            }
+            
+            .cta-button:hover,
+            .feedback-button:hover,
+            .social-link:hover,
+            .cta-secondary:hover,
+            .newsletter-button:hover {
+                transform: none;
+            }
+            
+            .cta-button:active,
+            .feedback-button:active,
+            .social-link:active,
+            .cta-secondary:active,
+            .newsletter-button:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Optimisez vos requêtes SQL.<br>Gratuitement. Facilement.</h1>
+                <p class="hero-subtitle">
+                    Un outil conçu par un passionné de données pour la communauté. 👉 PostgreSQL & MySQL. 100% gratuit. Aucune inscription. Juste de l'efficacité.
+                </p>
+                <a href="#demo" class="cta-button">Tester l'outil maintenant</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Story Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Un projet né de la frustration… et de l'envie de construire quelque chose d'utile.</h2>
+            <div class="story-section fade-in">
+                <p class="story-text">
+                    Je m'appelle <span class="highlight">Diallo Abderahmane</span>, passionné de données, développeur autodidacte, et convaincu que l'on peut résoudre de vrais problèmes sans moyens démesurés.
+                </p>
+                <p class="story-text">
+                    J'ai souvent eu des difficultés avec des requêtes SQL trop lentes, mal écrites, ou difficiles à comprendre. J'ai donc décidé de créer un outil simple pour les optimiser — d'abord pour moi, puis pour nous tous.
+                </p>
+                <p class="story-text">
+                    👉 C'est 100% gratuit, ouvert, et évolutif. Ce projet, je veux le construire <span class="highlight">avec vous</span>. Vos retours sont au cœur de son amélioration.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Ce que l'outil peut déjà faire :</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Analyse rapide</h3>
+                    <p class="feature-text">Analyse instantanée de vos requêtes SQL pour PostgreSQL & MySQL avec des résultats précis et détaillés.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Suggestions d'optimisation</h3>
+                    <p class="feature-text">Recommandations lisibles et compréhensibles pour améliorer les performances de vos requêtes.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Explication détaillée</h3>
+                    <p class="feature-text">Identification et explication des parties lentes ou mal écrites de vos requêtes SQL.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">Interface simple</h3>
+                    <p class="feature-text">Interface directe et intuitive, sans inscription requise. Collez votre requête et obtenez des résultats instantanés.</p>
+                </div>
+            </div>
+            <div class="story-section fade-in" style="text-align: center; margin-top: 3rem;">
+                <p class="story-text">
+                    Et surtout : <span class="highlight">vos retours inspirent les prochaines features.</span> Vous avez le pouvoir d'influencer son évolution.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="section" id="demo">
+        <div class="container">
+            <div class="demo-container fade-in">
+                <div class="demo-content">
+                    <h2 class="demo-title">🧪 Voici à quoi ça ressemble</h2>
+                    <p class="demo-text">Pas de fioritures, juste l'essentiel pour gagner du temps.</p>
+                    <div class="demo-placeholder">
+                        📊 Capture d'écran de l'interface ou GIF de démo<br>
+                        Avant → Requête lente | Après → Requête optimisée<br><br>
+                        <em>Interface de démonstration à venir...</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="section">
+        <div class="container">
+            <div class="community-section fade-in">
+                <div class="community-content">
+                    <h2 class="community-title">💬 Construisons ensemble un outil utile.</h2>
+                    <p class="community-text">
+                        Ce n'est pas seulement un projet personnel. C'est un outil open-source fait pour nous, la communauté des données.
+                    </p>
+                    <p class="community-text">
+                        Vos retours sont <strong>indispensables</strong>.
+                    </p>
+                    <div style="margin: 2rem 0;">
+                        <p>• Ce qui fonctionne ? Dites-le-nous.</p>
+                        <p>• Ce qui manque ? Proposez-le.</p>
+                        <p>• Un bug ? Signalez-le.</p>
+                    </div>
+                    <p class="community-text">
+                        Chaque contribution compte. Et vous serez <strong>mentionné(e) dans le changelog</strong> si vous contribuez à son amélioration.
+                    </p>
+                    <a href="feedback-modal.html" class="feedback-button">Donner un feedback</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section">
+        <div class="container">
+            <div class="about-card fade-in">
+                <h2 class="about-title">Qui suis-je ?</h2>
+                <p class="about-text">
+                    🎓 Étudiant en informatique et autodidacte passionné de développement et de données.
+                </p>
+                <p class="about-text">
+                    👨‍💻 J'ai appris à programmer en autodidacte, en construisant des projets utiles, concrets et accessibles.
+                </p>
+                <p class="about-text">
+                    🌍 Basé en Guinée, je crois profondément que la technologie peut être un levier d'égalité, même sans gros moyens.
+                </p>
+                <p class="about-text">
+                    Ce projet, c'est ma façon de contribuer — et d'apprendre en chemin.
+                </p>
+                <a href="https://linkedin.com/in/diallo-abderahmane" class="social-link" target="_blank">Suivez-moi sur LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="section">
+        <div class="container">
+            <div class="newsletter fade-in">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">📬 Suivez l'évolution</h3>
+                <p style="color: var(--gray);">L'app évolue chaque semaine. Si vous voulez suivre les nouveautés, les retours de la communauté et les nouvelles features, inscrivez-vous ici :</p>
+                <form class="newsletter-form">
+                    <input type="text" placeholder="Votre prénom" class="newsletter-input" required>
+                    <input type="email" placeholder="Votre email" class="newsletter-input" required>
+                    <button type="submit" class="newsletter-button">S'inscrire</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2 class="final-title">🚀 Testez-le. Partagez-le. Faites-le évoluer.</h2>
+            <p class="final-text">
+                Ce projet n'existe que grâce à vous. Il est là pour simplifier le quotidien des Data Analysts, Engineers, Scientists. Si vous pensez qu'il peut aider quelqu'un, n'hésitez pas à le partager.
+            </p>
+            <div class="cta-group">
+                <a href="#demo" class="cta-button">Tester l'outil</a>
+                <a href="https://linkedin.com/sharing/share-offsite/?url=" class="cta-secondary" target="_blank">Partager sur LinkedIn</a>
+                <a href="https://twitter.com/intent/tweet?url=" class="cta-secondary" target="_blank">Partager sur Twitter</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Newsletter form handling
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputs = this.querySelectorAll('input');
+            const button = this.querySelector('button');
+            
+            // Simple form validation
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    valid = false;
+                    input.style.borderColor = '#ef4444';
+                } else {
+                    input.style.borderColor = '#e2e8f0';
+                }
+            });
+            
+            if (valid) {
+                button.textContent = 'Inscrit ! ✅';
+                button.style.background = '#10b981';
+                setTimeout(() => {
+                    button.textContent = 'S\'inscrire';
+                    button.style.background = '#6366f1';
+                    inputs.forEach(input => input.value = '');
+                }, 2000);
+            }
+        });
+
+        // Touch improvements for mobile
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (window.innerWidth > 768) {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (window.innerWidth > 768) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        });
+
+        // Dynamic gradient animation
+        let gradientAngle = 0;
+        setInterval(() => {
+            gradientAngle += 1;
+            document.documentElement.style.setProperty('--gradient', 
+                `linear-gradient(${gradientAngle}deg, #667eea 0%, #764ba2 100%)`);
+        }, 100);
+    </script>
+</body>
+</html>
